@@ -1,0 +1,32 @@
+{
+  "name": "insurance-ams",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dashBoardData": "npx tsx src/app/db_Scripts/dashBoardData.tsx",
+    "deleteData": "npx tsx src/app/db_Scripts/deleteData.tsx",
+    "syntheticData": "npx tsx src/app/db_Scripts/syntheticData.tsx",
+    "createDefaultClient": "npx tsx src/app/db_Scripts/createDefaultClient.tsx",
+    "dbSandBox": "npx tsx src/app/db_Scripts/sandbox.tsx",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "next": "^14.2.24",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.5.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "postcss": "^8",
+    "prisma": "^6.3.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
