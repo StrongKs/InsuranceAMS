@@ -7,9 +7,11 @@ const prisma = new PrismaClient();
 async function resetDatabase() {
     console.log("🗑 Deleting all data...");
 
+    await prisma.claim.deleteMany({});
     await prisma.policy.deleteMany({});
     await prisma.client.deleteMany({});
     await prisma.insurance.deleteMany({});
+    
 
     console.log("✅ Database reset complete!");
 }
