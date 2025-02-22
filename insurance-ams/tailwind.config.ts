@@ -5,6 +5,8 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    // "./src/app/\\(dashboard\\)/**/*.{js,ts,jsx,tsx,mdx}",  // added-couldnt find dashboard
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
