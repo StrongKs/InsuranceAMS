@@ -7,7 +7,7 @@ schema.prisma file is the layout/tables of our data base. We are using neon site
 Must have `.env` file in root of `insurance-ams` folder. Ensure to enclude the file name in your `.gitignore` file which is in same root location. Define `DATABASE_URL= ... ` variable in your `.env` this is your end point to connect to db. We can make branches of out db like github. I have created a "dummyData" branch that is a child of main which already hold our starting table layout. I will be adding dummd data to serve us during this project.
 
 ## Scripts Information
-`insurance-ams/src/app/db_Scripts` contains scripts to test and query bd.
+`insurance-ams/prisma/db_Scripts` contains scripts to test and query bd.
 
 To run update `package.json` in root directory and add Script Name like `dbSandBox` with the command `nodemon (filepath)`. Then to execute script file run `npm run (Script Name)`. In this example it would be `npm run dbSandBox`.
 
@@ -15,7 +15,7 @@ Must have `tsx` package installed to run the .tsx script. Run `npm install -g ts
 
 ```
  "scripts": {
-    "dbSandBox": "npx tsx src/app/db_Scripts/sandbox.tsx",
+    "dbSandBox": "npx tsx prisma/db_Scripts/sandbox.tsx",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -31,6 +31,9 @@ Must have `tsx` package installed to run the .tsx script. Run `npm install -g ts
 5. `dashBoardData` - demonstrates all functions for data displayed on dashBoard.
 
 # Commands:
+
+## View Tables
+`npx prisma studio` - Locally will display tables in a localhost:port on your machine (better than looking through neon site)
 
 ## Dependancies
 `npm install -g tsx` - package to run .tsx files
