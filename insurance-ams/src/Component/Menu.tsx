@@ -79,12 +79,12 @@ const Menu = () => {
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
-        <div className="" key={i.title}>
-          <span>{i.title}</span>
+        <div className="flex flex-col gap-4" key={i.title}>
+          <span className="hidden lg:block text-gray-600 my-4">{i.title}</span>
           {i.items.map((item) => (
-            <Link className="flex flex-row" href={item.href} key={item.label}>
+            <Link className="flex items-center justify-center lg:justify-start gap-4 text-gray-400 py-2" href={item.href} key={item.label}>
               <Box sx={{ fontSize: 20 }}>{item.icon}</Box>
-              <span>{item.label}</span>
+              <span className="hidden lg:block">{item.label}</span>
             </Link>
           ))}
         </div>
