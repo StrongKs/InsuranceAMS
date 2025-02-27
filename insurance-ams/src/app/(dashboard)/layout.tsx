@@ -22,7 +22,7 @@ export default function DashboardLayout({
       </div>
       {/* Right Side */}
       <div className="w-[86%] md:w-[92%] lg:w-[84%] cl:w-[86%] bg-blue-300">
-        Right
+        {children}
       </div>
     </div>
   );
