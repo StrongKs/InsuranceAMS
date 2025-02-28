@@ -1,5 +1,6 @@
 import CountChart from "@/Component/CountChart";
 import UserCard from "@/Component/UserCard";
+import ClientPipelineChart from "@/Component/ClientPipelineChart";
 
 const AdminPage = () => {
   return (
@@ -19,8 +20,13 @@ const AdminPage = () => {
           <div className="w-full lg:w-1/3 h-[450px]">
             <CountChart />
           </div>
-          {/* Pipline */}
-          <div className="w-full lg:w-2/3 h-[450px]"></div>
+          {/* Funnel Chart */}
+          {/* Displays how many people progress down the funnel - shows where client was stopped. 
+          Ex. client didnt progress through to signing so it ended there. 
+          some end in signed and some end in no sign */}
+          <div className="w-full lg:w-2/3 h-[450px]">
+            <ClientPipelineChart />
+          </div>
         </div>
         {/* Bottom Charts */}
         <div className=""></div>
