@@ -55,7 +55,7 @@ const data = [
   {
     name: "Accepted",
     income: 600,
-    fill: "#a4de6c",
+    fill: "#4DB8A4",
   },
 ];
 

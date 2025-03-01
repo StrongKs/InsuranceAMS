@@ -90,7 +90,7 @@ const InsuredLineChart = () => {
           <Line
             type="monotone"
             dataKey="clients"
-            stroke="#82ca9d"
+            stroke="#83a6ed"
             strokeWidth={3}
           />
         </LineChart>

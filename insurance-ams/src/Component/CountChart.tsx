@@ -21,7 +21,7 @@ const data = [
     name: "Commercial",
     uv: 125,
     pv: 99567,
-    fill: "#E3CC00",
+    fill: "#78CCF1",
   },
   {
     name: "Total",
@@ -75,7 +75,7 @@ const countChart = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <div className="w-5 h-5 bg-vividYellow rounded-full" />
+          <div className="w-5 h-5 bg-accentBlue rounded-full" />
           <h1 className="font-bold">125</h1>
           <h2 className="text-xs text-gray-500">Commercial (48.46%)</h2>
         </div>
