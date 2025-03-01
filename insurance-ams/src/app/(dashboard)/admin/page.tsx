@@ -1,6 +1,9 @@
 import CountChart from "@/Component/CountChart";
 import UserCard from "@/Component/UserCard";
 import ClientPipelineChart from "@/Component/ClientPipelineChart";
+import InsuredLineChart from "@/Component/InsuredLineChart";
+import EventCalendar from "@/Component/EventCalendar";
+import Accouncement from "@/Component/Accouncement";
 
 const AdminPage = () => {
   return (
@@ -29,10 +32,15 @@ const AdminPage = () => {
           </div>
         </div>
         {/* Bottom Charts */}
-        <div className=""></div>
+        <div className="w-full h-[500px]">
+          <InsuredLineChart />
+        </div>
       </div>
       {/* RIGHT */}
-      <div className="w-full lg:w-1/3">R</div>
+      <div className="w-full lg:w-1/3 flex flex-col gap-8">
+        <EventCalendar />
+        <Accouncement />
+      </div>
     </div>
   );
 };
