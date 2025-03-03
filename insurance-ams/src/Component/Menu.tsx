@@ -58,7 +58,7 @@ const menuItems = [
     items: [
       {
         icon: <PermIdentityIcon />,
-        label: "profile",
+        label: "Profile",
         href: "/",
       },
       {
@@ -68,7 +68,7 @@ const menuItems = [
       },
       {
         icon: <LogoutIcon />,
-        label: "logout",
+        label: "Logout",
         href: "/",
       },
     ],
