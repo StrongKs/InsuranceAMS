@@ -1,35 +1,29 @@
+"use server";
+
 import { PrismaClient } from "@prisma/client";
-// importing enums
 import { Stage, PolicyStatus, ClaimStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
-// use `prisma` in your application to read and write data in your DB
-
-async function main() {
-  console.log("Dashboard Data Query...");
-
-  const clients_quotesInProgress = await getQuotesInProgress();
-  const clients_openClaims = await getOpenClaims();
-  const policies_pendingToBind = await getPendingToBindPolicies(); // TODO
-  const clients_leads = await getLeads();
-  const policies_expiring60days = await getExpiringPolicies60days(60);
-  const claims = await getClaims();
-}
 
 // Quotes in Progress - returns all clients with stage "QUOTE"
-async function getQuotesInProgress() {
-  const quotesInProgress = await prisma.client.findMany({
-    where: {
-      stage: "QUOTE",
-    },
-  });
-  // console.log(quotesInProgress);
-  console.log(`There are ${quotesInProgress.length} quotes in progress.`);
-  return quotesInProgress;
+export async function getQuotesInProgress() {
+  try {
+    const quotesInProgress = await prisma.client.findMany({
+      where: {
+        stage: "QUOTE",
+      },
+    });
+    // console.log(quotesInProgress);
+    console.log(`There are ${quotesInProgress.length} quotes in progress.`);
+    return quotesInProgress;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 }
 
 // Open Claims - returns all clients with open claims
-async function getOpenClaims() {
+export async function getOpenClaims() {
   const openClaims = await prisma.client.findMany({
     where: {
       openClaims: true,
@@ -42,7 +36,7 @@ async function getOpenClaims() {
 
 // TODO: update synthetic data to include policies with status "PENDING_SIGNATURE"
 // Pending to bind Policies - returns all policies with status "PENDING_SIGNATURE"
-async function getPendingToBindPolicies() {
+export async function getPendingToBindPolicies() {
   const pendingToBindPolicies = await prisma.policy.findMany({
     where: {
       status: PolicyStatus.PENDING_SIGNATURE,
@@ -56,7 +50,7 @@ async function getPendingToBindPolicies() {
 }
 
 // Leads - returns all clients with stage "LEAD"
-async function getLeads() {
+export async function getLeads() {
   const leads = await prisma.client.findMany({
     where: {
       stage: Stage.LEAD,
@@ -68,7 +62,7 @@ async function getLeads() {
 }
 
 // Expiring policies in next numDays (non-renewing/ auto-renewing) - reutrn all policies with end date in the next numDays
-async function getExpiringPolicies60days(numDays: number) {
+export async function getExpiringPolicies60days(numDays: number) {
   const expiringPolicies = await prisma.policy.findMany({
     where: {
       endDate: {
@@ -82,7 +76,7 @@ async function getExpiringPolicies60days(numDays: number) {
 }
 
 // Claims
-async function getClaims() {
+export async function getClaims() {
   const claims = await prisma.claim.findMany({
     where: {
       status: {
@@ -95,10 +89,43 @@ async function getClaims() {
   return claims;
 }
 
-main()
-  .catch((e) => {
-    console.error(e.message);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// return all policies
+export async function getPolicies() {
+  const policies = await prisma.policy.findMany();
+  console.log(`There are ${policies.length} policies.`);
+  return policies;
+}
+
+export async function getActivePolicyData() {
+  const policies = await getPolicies();
+  const activePolicies = policies.filter(
+    (policy) => policy.status === PolicyStatus.ACTIVE
+  ).length;
+  const nonActivePolicies = policies.filter(
+    (policy) => policy.status !== PolicyStatus.ACTIVE
+  ).length;
+  const totalPolicies = policies.length;
+
+  const data = [
+    {
+      name: "Active",
+      total: activePolicies,
+      fill: "#6BEFCF",
+    },
+    {
+      name: "Non-Active",
+      total: nonActivePolicies,
+      fill: "#78CCF1",
+    },
+    {
+      name: "Total",
+      total: totalPolicies,
+      fill: "white",
+    },
+  ];
+
+  console.log("Active Policy Data: ");
+  console.log(data);
+
+  return data;
+}
