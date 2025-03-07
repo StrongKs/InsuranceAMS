@@ -52,6 +52,8 @@ const countChart = () => {
   const [activePolicies, setActivePolicies] = useState<number>(0);
   const [nonActivePolicies, setNonActivePolicies] = useState<number>(0);
 
+  // calculate percentage of active and non-active policies instead of hardcoding
+
   useEffect(() => {
     const fetchData = async () => {
       const policiesData = await getActivePolicyData();
