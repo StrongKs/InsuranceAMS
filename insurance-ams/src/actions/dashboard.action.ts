@@ -93,6 +93,7 @@ export async function getClaims() {
 export async function getPolicies() {
   const policies = await prisma.policy.findMany();
   console.log(`There are ${policies.length} policies.`);
+
   return policies;
 }
 
@@ -124,8 +125,8 @@ export async function getActivePolicyData() {
     },
   ];
 
-  console.log("Active Policy Data: ");
-  console.log(data);
+  //   console.log("Active Policy Data: ");
+  //   console.log(data);
 
   return data;
 }
