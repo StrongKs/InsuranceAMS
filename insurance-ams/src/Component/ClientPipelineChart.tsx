@@ -1,6 +1,8 @@
 "use client";
 
+import { clientPiplineData } from "@/actions/dashboard.action";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -59,6 +61,31 @@ const data = [
   },
 ];
 
+const piplineChartCount = () => {
+  interface PiplineData {
+    name: string;
+    income: number;
+    fill: string;
+  }
+
+  const [piplineData, setPiplineData] = useState<PiplineData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const piplineData = await clientPiplineData();
+      setPiplineData(
+        piplineData.map((pipline: any) => ({
+          name: pipline.name,
+          income: pipline.income,
+          fill: pipline.fill,
+        }))
+      );
+    };
+
+    fetchData();
+  });
+};
+
 // Sets the value label on each section
 const CustomLabel: React.FC<LabelProps> = ({ x, y, width, height, value }) => {
   const cx =
@@ -82,6 +109,29 @@ const CustomLabel: React.FC<LabelProps> = ({ x, y, width, height, value }) => {
 };
 
 const ClientPipelineChart = () => {
+  interface PiplineData {
+    name: string;
+    income: number;
+    fill: string;
+  }
+
+  const [piplineData, setPiplineData] = useState<PiplineData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const piplineData = await clientPiplineData();
+      setPiplineData(
+        piplineData.map((pipline: any) => ({
+          name: pipline.name,
+          income: pipline.income,
+          fill: pipline.fill,
+        }))
+      );
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       <div className="flex justify-between items-center">
@@ -91,14 +141,18 @@ const ClientPipelineChart = () => {
       <ResponsiveContainer width="100%" height="90%">
         <FunnelChart>
           <Tooltip />
-          <Funnel dataKey="income" data={data} isAnimationActive>
+          <Funnel dataKey="income" data={piplineData} isAnimationActive>
             <LabelList
               position="right"
               fill="#000"
               stroke="none"
               dataKey="name"
             />
-            <LabelList content={<CustomLabel />} dataKey="income" />
+            <LabelList
+              // content={<CustomLabel />}
+              dataKey="income"
+              position="inside"
+            />
           </Funnel>
         </FunnelChart>
       </ResponsiveContainer>

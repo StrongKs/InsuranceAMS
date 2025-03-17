@@ -130,3 +130,57 @@ export async function getActivePolicyData() {
 
   return data;
 }
+
+export async function getClientAtLeadStage() {
+  const consults = await prisma.client.findMany({
+    where: {
+      stage: Stage.CONSULT,
+    },
+  });
+
+  //   console.log("Client at Lead Stage Data: ");
+  //   console.log(data);
+
+  return consults;
+}
+
+export async function clientPiplineData() {
+  const leads = await getLeads();
+  const consults = await getClientAtLeadStage();
+  const quotes = await getQuotesInProgress();
+  const denied = await getOpenClaims();
+  const accepted = await getPendingToBindPolicies();
+
+  const data = [
+    {
+      name: "Lead",
+      income: leads.length,
+      fill: "#8884d8",
+    },
+    {
+      name: "Consult",
+      income: consults.length,
+      fill: "#83a6ed",
+    },
+    {
+      name: "Quote",
+      income: quotes.length,
+      fill: "#8dd1e1",
+    },
+    {
+      name: "Denied",
+      income: denied.length,
+      fill: "#82ca9d",
+    },
+    {
+      name: "Accepted",
+      income: accepted.length,
+      fill: "#4DB8A4",
+    },
+  ];
+
+  //   console.log("Client Pipeline Data: ");
+  //   console.log(data);
+
+  return data;
+}
