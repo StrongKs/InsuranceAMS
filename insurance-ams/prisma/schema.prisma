@@ -123,7 +123,7 @@ enum ClaimStatus {
 model Agent {
   id            String   @id @default(cuid())
   name          String
-  startDate     DateTime
+  startDate     DateTime @default(now())
   phone         String
   address       String
   licenseNumber String   @unique
