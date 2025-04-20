@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  // Personal information
+  id         String     @id @default(cuid())
+  Fname      String
+  Lname      String?
+  DOB        DateTime?
+  gender     String?
+  address    String?
+  email      String?
+  phone      String
+  dependants String[]
+
+  // Insurance information
+  stage      Stage      @default(LEAD)
+  openClaims Boolean    @default(false)
+
+  // Timestamps
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  // Relations
+  policies   Policy[]
+  insurances Insurance[]
+}
+
+// Client stage
+enum Stage {
+  LEAD
+  CONSULT
+  QUOTE
+  CLOSED_ACCEPTED
+  CLOSED_DENIED
+}
+
+model Policy {
+  id          String     @id @default(cuid())
+
+  // Policy information
+  policyNumber String
+  startDate   DateTime
+  endDate     DateTime
+  premium     Float
+  isActive    Boolean   @default(true)
+  status      PolicyStatus @default(PENDING_SIGNATURE)
+
+  // Timestamps
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  clientId    String
+  client      Client     @relation(fields: [clientId], references: [id])
+  insuranceId String
+  insurance   Insurance  @relation(fields: [insuranceId], references: [id])
+  claims      Claim[]
+}
+
+enum PolicyStatus {
+  PENDING_SIGNATURE
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model Insurance {
+  id          String     @id @default(cuid())
+
+  // Insurance company information
+  name        String
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  clients     Client[]
+  policies    Policy[]
+}
+
+model Claim {
+  id          String     @id @default(cuid())
+  
+  // Claim information
+  claimNumber String
+  incidentDate DateTime
+  amount      Float
+  atFault     Boolean
+  status      ClaimStatus
+
+  // Timestamps
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  policyId    String
+  policy      Policy     @relation(fields: [policyId], references: [id])
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IN_REVIEW
+  CLOSED
+}
