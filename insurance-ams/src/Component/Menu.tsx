@@ -1,3 +1,5 @@
+"use client";
+
 import HomeIcon from "@mui/icons-material/Home";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import PolicyIcon from "@mui/icons-material/Policy";
@@ -11,6 +13,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "next/link";
 import Image from "next/image";
 import { Box } from "@mui/material";
+import { useRouter } from "next/router";
 
 const menuItems = [
   {
@@ -69,11 +72,20 @@ const menuItems = [
       {
         icon: <LogoutIcon />,
         label: "Logout",
-        href: "/",
+        href: "#",
+        onClick: () => handleLogout(),
       },
     ],
   },
 ];
+
+const handleLogout = async () => {
+  await fetch("/api/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  window.location.href = "/login";
+};
 
 const Menu = () => {
   return (
@@ -82,7 +94,12 @@ const Menu = () => {
         <div className="flex flex-col gap-4" key={i.title}>
           <span className="hidden lg:block text-gray-600 my-4">{i.title}</span>
           {i.items.map((item) => (
-            <Link className="flex items-center justify-center lg:justify-start gap-4 text-gray-400 py-2" href={item.href} key={item.label}>
+            <Link
+              className="flex items-center justify-center lg:justify-start gap-4 text-gray-400 py-2"
+              href={item.href}
+              key={item.label}
+              onClick={item.onClick}
+            >
               <Box sx={{ fontSize: 20 }}>{item.icon}</Box>
               <span className="hidden lg:block">{item.label}</span>
             </Link>
