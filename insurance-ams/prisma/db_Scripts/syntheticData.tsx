@@ -113,35 +113,35 @@ async function main() {
     })
   );
 
-  // Create 2 agents and evenly assign clients that don't have agents yet
-  const numAgents = 2;
-  const agents = await Promise.all(
-    Array.from({ length: numAgents }).map((_, index) => {
-      const clientsPerAgent = Math.ceil(numClients / numAgents);
-      const assignedClients = clients.slice(
-        index * clientsPerAgent,
-        (index + 1) * clientsPerAgent
-      );
+  // // Create 2 agents and evenly assign clients that don't have agents yet
+  // const numAgents = 2;
+  // const agents = await Promise.all(
+  //   Array.from({ length: numAgents }).map((_, index) => {
+  //     const clientsPerAgent = Math.ceil(numClients / numAgents);
+  //     const assignedClients = clients.slice(
+  //       index * clientsPerAgent,
+  //       (index + 1) * clientsPerAgent
+  //     );
 
-      return prisma.agent.create({
-        data: {
-          name: faker.person.firstName(),
-          phone: faker.phone.number(),
-          address: faker.location.streetAddress(),
-          licenseNumber: faker.string.alphanumeric(10),
-          clients: {
-            connect: assignedClients.map((c) => ({ id: c.id })),
-          },
-        },
-      });
-    })
-  );
+  //     return prisma.agent.create({
+  //       data: {
+  //         name: faker.person.firstName(),
+  //         phone: faker.phone.number(),
+  //         address: faker.location.streetAddress(),
+  //         licenseNumber: faker.string.alphanumeric(10),
+  //         clients: {
+  //           connect: assignedClients.map((c) => ({ id: c.id })),
+  //         },
+  //       },
+  //     });
+  //   })
+  // );
 
   console.log(`Created ${numInsurances} insurance companies.`);
   console.log(`Created ${numClients} clients.`);
   console.log(`Created ${numberOfPolicies} policies.`);
   console.log(`Created ${numClaims} claims.`);
-  console.log(`Created ${numAgents} agents.`);
+  // console.log(`Created ${numAgents} agents.`);
 
   console.log("✅ Seeding completed! _ClientToInsurance table populated!");
 }
