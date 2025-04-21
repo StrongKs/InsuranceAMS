@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Role } from '@prisma/client';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,12 +29,17 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+      
 
       const data = await res.json();
+      
       // Redirect based on user role
-      if (data.role === 'Admin') {
+      console.log(data.role === Role.ADMIN);
+      
+      if (data.role === Role.ADMIN) {
         router.push('/admin');
-      } else if (data.role === 'Agent') {
+
+      } else if (data.role === Role.AGENT) {
         router.push('/agent');
       } else {
         router.push('/');
