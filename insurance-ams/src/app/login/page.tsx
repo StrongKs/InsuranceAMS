@@ -32,7 +32,7 @@ export default function LoginPage() {
       const data = await res.json();
       // Redirect based on user role
       if (data.role === 'Admin') {
-        router.push('/admin');
+        window.location.href = '/admin';
       } else if (data.role === 'Agent') {
         router.push('/agent');
       } else {
@@ -119,10 +119,12 @@ export default function LoginPage() {
           />
         </div>
 
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
         <button
           type="submit"
           disabled={loading}
           style={{
+            flex: 1,
             backgroundColor: '#3b82f6',
             color: '#fff',
             padding: '0.75rem 1.5rem',
@@ -133,6 +135,27 @@ export default function LoginPage() {
         >
           {loading ? 'Logging in...' : 'Log In'}
         </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            alert('Session cleared!');
+          }}
+          style={{
+            flex: 1,
+            backgroundColor: '#ef4444',
+            color: '#fff',
+            padding: '0.75rem 1.5rem',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Delete Cookies
+        </button>
+</div>
+
       </form>
     </div>
   );

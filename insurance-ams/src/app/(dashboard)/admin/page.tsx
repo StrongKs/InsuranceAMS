@@ -5,27 +5,16 @@ import InsuredLineChart from "@/Component/InsuredLineChart";
 import EventCalendar from "@/Component/EventCalendar";
 import Accouncement from "@/Component/Accouncement";
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
+import { getSession } from '@/lib/auth';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
 
 async function AdminPage() {
 
-  const cookieStore = cookies();
-  const token = cookieStore.get('token')?.value;
+  const session = await getSession();
+  console.log('session on /admin:', session);
 
-  if (!token) {
-    redirect('/login');
-  }
-
-  try {
-    const payload = jwt.verify(token, JWT_SECRET) as { role: string };
-    if (payload.role !== 'Admin') {
-      redirect('/login');
-    }
-  } catch (error) {
-    // If token invalid, redirect
+  if (!session || session.role !== 'Admin') {
     redirect('/login');
   }
   return (
