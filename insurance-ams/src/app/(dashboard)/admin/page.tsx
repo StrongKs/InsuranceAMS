@@ -1,33 +1,37 @@
+"use client";
+
 import CountChart from "@/Component/CountChart";
 import UserCard from "@/Component/UserCard";
 import ClientPipelineChart from "@/Component/ClientPipelineChart";
 import InsuredLineChart from "@/Component/InsuredLineChart";
 import EventCalendar from "@/Component/EventCalendar";
 import Accouncement from "@/Component/Accouncement";
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
-import { Role } from '@prisma/client';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import { Role } from "@prisma/client";
+
+
+const JWT_SECRET = process.env.JWT_SECRET || "plaintext_test_secret";
 
 async function AdminPage() {
-
   const cookieStore = cookies();
-  const token = cookieStore.get('token')?.value;
+  const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    redirect('/login');
+    redirect("/login");
   }
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { role: string };
+    console.log("payload: ", payload);
     if (payload.role !== Role.ADMIN) {
-      redirect('/login');
+      redirect("/login");
     }
   } catch (error) {
     // If token invalid, redirect
-    redirect('/login');
+    redirect("/login");
   }
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row">
@@ -35,10 +39,10 @@ async function AdminPage() {
       <div className="w-full lg:w-2/3 flex flex-col gap-8">
         {/* UserCards */}
         <div className="flex gap-4 justify-between flex-wrap">
-          <UserCard type="Leads" amount={323} />
-          <UserCard type="Quoted" amount={99} />
-          <UserCard type="Pending" amount={3} />
-          <UserCard type="Renewals" amount={893} />
+          <UserCard type="Leads" amount={leads} />
+          <UserCard type="Quoted" amount={quotesInProgress} />
+          <UserCard type="Pending" amount={pendingToBindPolicies} />
+          <UserCard type="Renewals" amount={expiringPolicies} />
         </div>
         {/* Middle Charts */}
         <div className="flex gap-4 flex-col lg:flex-row">
@@ -66,6 +70,6 @@ async function AdminPage() {
       </div>
     </div>
   );
-};
+}
 
 export default AdminPage;
