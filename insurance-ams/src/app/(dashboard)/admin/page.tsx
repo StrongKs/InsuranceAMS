@@ -10,8 +10,7 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
 
-
-export default async function AdminPage = () => {
+async function AdminPage() {
 
   const cookieStore = cookies();
   const token = cookieStore.get('token')?.value;
