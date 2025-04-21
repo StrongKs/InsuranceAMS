@@ -1,9 +1,12 @@
+"use client";
+
 import CountChart from "@/Component/CountChart";
 import UserCard from "@/Component/UserCard";
 import ClientPipelineChart from "@/Component/ClientPipelineChart";
 import InsuredLineChart from "@/Component/InsuredLineChart";
 import EventCalendar from "@/Component/EventCalendar";
 import Accouncement from "@/Component/Accouncement";
+import React, { useEffect, useState } from "react";
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
@@ -34,10 +37,10 @@ async function AdminPage() {
       <div className="w-full lg:w-2/3 flex flex-col gap-8">
         {/* UserCards */}
         <div className="flex gap-4 justify-between flex-wrap">
-          <UserCard type="Leads" amount={323} />
-          <UserCard type="Quoted" amount={99} />
-          <UserCard type="Pending" amount={3} />
-          <UserCard type="Renewals" amount={893} />
+          <UserCard type="Leads" amount={leads} />
+          <UserCard type="Quoted" amount={quotesInProgress} />
+          <UserCard type="Pending" amount={pendingToBindPolicies} />
+          <UserCard type="Renewals" amount={expiringPolicies} />
         </div>
         {/* Middle Charts */}
         <div className="flex gap-4 flex-col lg:flex-row">

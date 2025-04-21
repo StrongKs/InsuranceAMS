@@ -15,7 +15,7 @@ datasource db {
 
 model Client {
   // Personal information
-  id         String     @id @default(cuid())
+  id         String    @id @default(cuid())
   Fname      String
   Lname      String?
   DOB        DateTime?
@@ -26,16 +26,18 @@ model Client {
   dependants String[]
 
   // Insurance information
-  stage      Stage      @default(LEAD)
-  openClaims Boolean    @default(false)
+  stage      Stage   @default(LEAD)
+  openClaims Boolean @default(false)
 
   // Timestamps
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   policies   Policy[]
   insurances Insurance[]
+  agentId    String?
+  agent      Agent?      @relation(fields: [agentId], references: [id])
 }
 
 // Client stage
@@ -48,25 +50,25 @@ enum Stage {
 }
 
 model Policy {
-  id          String     @id @default(cuid())
+  id String @id @default(cuid())
 
   // Policy information
   policyNumber String
-  startDate   DateTime
-  endDate     DateTime
-  premium     Float
-  isActive    Boolean   @default(true)
-  status      PolicyStatus @default(PENDING_SIGNATURE)
+  startDate    DateTime
+  endDate      DateTime
+  premium      Float
+  isActive     Boolean      @default(true)
+  status       PolicyStatus @default(PENDING_SIGNATURE)
 
   // Timestamps
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   clientId    String
-  client      Client     @relation(fields: [clientId], references: [id])
+  client      Client    @relation(fields: [clientId], references: [id])
   insuranceId String
-  insurance   Insurance  @relation(fields: [insuranceId], references: [id])
+  insurance   Insurance @relation(fields: [insuranceId], references: [id])
   claims      Claim[]
 }
 
@@ -78,36 +80,36 @@ enum PolicyStatus {
 }
 
 model Insurance {
-  id          String     @id @default(cuid())
+  id String @id @default(cuid())
 
   // Insurance company information
   name        String
   description String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  clients     Client[]
-  policies    Policy[]
+  clients  Client[]
+  policies Policy[]
 }
 
 model Claim {
-  id          String     @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Claim information
-  claimNumber String
+  claimNumber  String
   incidentDate DateTime
-  amount      Float
-  atFault     Boolean
-  status      ClaimStatus
+  amount       Float
+  atFault      Boolean
+  status       ClaimStatus
 
   // Timestamps
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  policyId    String
-  policy      Policy     @relation(fields: [policyId], references: [id])
+  policyId String
+  policy   Policy @relation(fields: [policyId], references: [id])
 }
 
 enum ClaimStatus {
@@ -125,4 +127,3 @@ model User{
   password   String
   role       String
 }
-
