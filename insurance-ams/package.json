@@ -8,9 +8,9 @@
     "syntheticData": "npx tsx prisma/db_Scripts/syntheticData.tsx",
     "createDefaultClient": "npx tsx prisma/db_Scripts/createDefaultClient.tsx",
     "dbSandBox": "npx tsx prisma/db_Scripts/sandbox.tsx",
-    "dev": "next dev -H 0.0.0.0 -p $PORT",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0 -p $PORT",
     "lint": "next lint",
     "postinstall": "npx prisma generate"
   },
