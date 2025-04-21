@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { useState } from "react";
 
@@ -85,7 +86,7 @@ export default function ClientTable({ clients }: ClientTableProps) {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-5xl font-bold mb-4 text-blue-500">Client List</h1>
         <button
-          onClick={() => router.push("client/new")}
+          onClick={() => router.push("clients/new")}
           className="bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           + Add New Client
@@ -115,13 +116,21 @@ export default function ClientTable({ clients }: ClientTableProps) {
             <tr key={client.id} className="border-t border-blue-200 hover:bg-blue-100">
               {columns.map((col) => (
                 <td key={col.field} className="p-2 text-center">
-                  {col.isDate
-                    ? client[col.field as keyof typeof client]
-                      ? new Date(client[col.field as keyof typeof client] as unknown as string).toLocaleDateString()
-                      : ""
-                    : String(client[col.field as keyof typeof client] ?? "")}
-                </td>
-              ))}
+                  {col.field === "id" ? (
+                    // Special case: if it's the ID column, make it a clickable link
+                  <Link href={`/clients/${client.id}`} className="text-blue-600 underline hover:text-blue-800">
+                    {String(client[col.field as keyof typeof client] ?? "")}
+                  </Link>
+                  ) : col.isDate ? (
+                    client[col.field as keyof typeof client]
+                  ? new Date(client[col.field as keyof typeof client] as unknown as string).toLocaleDateString()
+                  : ""
+    ) : (
+      String(client[col.field as keyof typeof client] ?? "")
+    )}
+  </td>
+))}
+
             </tr>
           ))
         ) : (

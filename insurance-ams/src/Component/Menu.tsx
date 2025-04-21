@@ -19,22 +19,22 @@ const menuItems = [
       {
         icon: <HomeIcon />,
         label: "Home",
-        href: "/",
+        href: "/admin",
       },
       {
         icon: <EmojiPeopleIcon />,
         label: "Clients",
-        href: "/",
+        href: "/clients",
       },
       {
         icon: <PolicyIcon />,
         label: "Policies",
-        href: "/",
+        href: "/policies",
       },
       {
         icon: <GppMaybeIcon />,
         label: "Claims",
-        href: "/",
+        href: "/Claims",
       },
       {
         icon: <AutorenewIcon />,

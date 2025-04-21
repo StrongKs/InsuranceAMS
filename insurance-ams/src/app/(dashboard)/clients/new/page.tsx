@@ -54,7 +54,7 @@ export default function AddClientPage() {
       }),
     });
 
-    router.push("/client"); // Go back to Client List after adding
+    router.push("/clients"); // Go back to Client List after adding
   };
 
   return (
