@@ -19,22 +19,22 @@ const menuItems = [
       {
         icon: <HomeIcon />,
         label: "Home",
-        href: "/",
+        href: "/admin",
       },
       {
         icon: <EmojiPeopleIcon />,
         label: "Clients",
-        href: "/",
+        href: "/clients",
       },
       {
         icon: <PolicyIcon />,
         label: "Policies",
-        href: "/",
+        href: "/policies",
       },
       {
         icon: <GppMaybeIcon />,
         label: "Claims",
-        href: "/",
+        href: "/Claims",
       },
       {
         icon: <AutorenewIcon />,
@@ -58,7 +58,7 @@ const menuItems = [
     items: [
       {
         icon: <PermIdentityIcon />,
-        label: "profile",
+        label: "Profile",
         href: "/",
       },
       {
@@ -68,7 +68,7 @@ const menuItems = [
       },
       {
         icon: <LogoutIcon />,
-        label: "logout",
+        label: "Logout",
         href: "/",
       },
     ],

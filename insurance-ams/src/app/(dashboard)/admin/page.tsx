@@ -7,40 +7,30 @@ import InsuredLineChart from "@/Component/InsuredLineChart";
 import EventCalendar from "@/Component/EventCalendar";
 import Accouncement from "@/Component/Accouncement";
 import React, { useEffect, useState } from "react";
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
 
-import {
-  getQuotesInProgress,
-  getOpenClaims,
-  getPendingToBindPolicies,
-  getLeads,
-  getExpiringPolicies60days,
-  getClaims,
-} from "@/actions/dashboard.action";
+const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
 
-const AdminPage = () => {
-  const [leads, setLeads] = useState<number>(0);
-  const [quotesInProgress, setQuotesInProgress] = useState<number>(0);
-  const [pendingToBindPolicies, setPendingToBindPolicies] = useState<number>(0);
-  const [expiringPolicies, setExpiringPolicies] = useState<number>(0);
+async function AdminPage() {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const leadsCount = await getLeads();
-      setLeads(leadsCount.length);
+  const cookieStore = cookies();
+  const token = cookieStore.get('token')?.value;
 
-      const quotesInProgressCount = await getQuotesInProgress();
-      setQuotesInProgress((quotesInProgressCount as any[]).length);
+  if (!token) {
+    redirect('/login');
+  }
 
-      const pendingToBindPoliciesCount = await getPendingToBindPolicies();
-      setPendingToBindPolicies((pendingToBindPoliciesCount as any[]).length);
-
-      const expiringPoliciesCount = await getExpiringPolicies60days(60);
-      setExpiringPolicies((expiringPoliciesCount as any[]).length);
-    };
-
-    fetchData();
-  }, []);
-
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { role: string };
+    if (payload.role !== 'Admin') {
+      redirect('/login');
+    }
+  } catch (error) {
+    // If token invalid, redirect
+    redirect('/login');
+  }
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row">
       {/* LEFT */}
