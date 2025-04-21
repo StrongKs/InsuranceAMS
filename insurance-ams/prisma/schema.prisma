@@ -36,8 +36,9 @@ model Client {
   // Relations
   policies   Policy[]
   insurances Insurance[]
-  agentId    String?
-  agent      Agent?      @relation(fields: [agentId], references: [id])
+
+  agentId    String? 
+
 }
 
 // Client stage
@@ -123,6 +124,7 @@ enum ClaimStatus {
 model User{
    // Personal information
   id         String     @id @default(cuid())
+  name      String?     @default("John Doe")
   email      String     @unique
   password   String
   role       Role      @default(AGENT) 

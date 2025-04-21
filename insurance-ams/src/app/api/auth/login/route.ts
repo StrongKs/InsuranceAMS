@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import prisma from '../../../../../prisma/db_Scripts/createDefaultClient';
+import prisma from '@/lib/prisma';
 
 // Use your own secret from .env or a placeholder
 const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';

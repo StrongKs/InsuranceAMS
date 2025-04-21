@@ -4,6 +4,7 @@ import Avatar from "react-avatar";
 import { useState, useEffect } from "react";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { Role } from "@prisma/client"; // Assuming you have this enum
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
@@ -79,7 +80,7 @@ const Navbar = () => {
             <p className="text-xs text-gray-500">Admin</p>
           </div>
           <Avatar 
-            name="Waleed Aref" 
+            name= "Waleed Aref"
             size="30" 
             round={true} 
             color="#6B46C1" 

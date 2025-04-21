@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Role } from "@prisma/client"; // Assuming you have this enum
+import { getUserFromToken } from "@/lib/auth"; // 🛠 Your version!
 
 export default function AddClientPage() {
   const router = useRouter();
-
+  const [agents, setAgents] = useState<{ id: string; email: string }[]>([]);
   const [formData, setFormData] = useState({
     Fname: "",
     Lname: "",
@@ -17,13 +19,39 @@ export default function AddClientPage() {
     address: "",
     dependants: "",
     openClaims: false,
+    agentId: "", // Important new field
   });
 
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/user"); // <--- Fetch user info
+      const { user } = await res.json();
+      if (!user) {
+        router.push("/login"); // Not logged in
+        return;
+      }
+
+      setUserRole(user.role);
+
+      if (user.role === "ADMIN") {
+        const res = await fetch("/api/agents");
+        const data = await res.json();
+        setAgents(data);
+      } else if (user.role === "AGENT") {
+        setFormData((prev) => ({ ...prev, agentId: user.userId }));
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement | HTMLSelectElement;
-  
+    const { name, value, type } = e.target;
+
     if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked; 
+      const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({
         ...prev,
         [name]: checked,
@@ -35,7 +63,6 @@ export default function AddClientPage() {
       }));
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +81,7 @@ export default function AddClientPage() {
       }),
     });
 
-    router.push("/clients"); // Go back to Client List after adding
+    router.push("/clients");
   };
 
   return (
@@ -62,7 +89,7 @@ export default function AddClientPage() {
       <h1 className="text-2xl font-bold text-blue-800 mb-6">Add New Client</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* First Name */}
+        {/* Regular input fields */}
         <input
           type="text"
           name="Fname"
@@ -72,7 +99,6 @@ export default function AddClientPage() {
           className="w-full border p-2 rounded"
           required
         />
-
         {/* Last Name */}
         <input
           type="text"
@@ -174,7 +200,25 @@ export default function AddClientPage() {
           </label>
         </div>
 
-        {/* Submit */}
+        {/* Only show Agent Dropdown if Admin */}
+        {userRole === Role.ADMIN && (
+          <select
+            name="agentId"
+            value={formData.agentId}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+            required
+          >
+            <option value="">Assign Agent</option>
+            {agents.map((agent) => (
+              <option key={agent.id} value={agent.id}>
+                {agent.email}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {/* Save Button */}
         <button
           type="submit"
           className="bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition w-full"
