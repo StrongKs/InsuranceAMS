@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
+import { Role } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
 
@@ -14,7 +15,7 @@ async function AgentPage() {
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { role: string };
-    if (payload.role !== 'Agent') {
+    if (payload.role !== Role.AGENT) {
       redirect('/login');
     }
   } catch (error) {

@@ -7,6 +7,7 @@ import Accouncement from "@/Component/Accouncement";
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
+import { Role } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'plaintext_test_secret';
 
@@ -21,7 +22,7 @@ async function AdminPage() {
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { role: string };
-    if (payload.role !== 'Admin') {
+    if (payload.role !== Role.ADMIN) {
       redirect('/login');
     }
   } catch (error) {
