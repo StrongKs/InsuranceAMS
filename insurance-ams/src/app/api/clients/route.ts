@@ -36,6 +36,7 @@ export async function POST(req: Request) {
         address: data.address || null,
         dependants: data.dependants || [],
         openClaims: data.openClaims ?? false,
+        agentId: data.agentId || null, // Assuming agentId is optional
         // createdAt and updatedAt are handled by Prisma
       },
     });

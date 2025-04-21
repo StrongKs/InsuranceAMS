@@ -54,6 +54,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         gender: data.gender,
         DOB: data.DOB ? new Date(data.DOB) : undefined,
         stage: data.stage,
+        dependants: data.dependants,
+        openClaims: data.openClaims,
+        agentId: data.agentId,
         // If you want to allow updating dependants or openClaims too, add here
       },
     });
