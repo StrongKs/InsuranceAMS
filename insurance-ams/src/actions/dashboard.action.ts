@@ -6,7 +6,9 @@ import { Stage, PolicyStatus, ClaimStatus } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Quotes in Progress - returns all clients with stage "QUOTE"
-export async function getQuotesInProgress() {
+export async function getQuotesInProgress(): Promise<
+  { id: string; stage: string }[]
+> {
   try {
     const quotesInProgress = await prisma.client.findMany({
       where: {
@@ -18,7 +20,7 @@ export async function getQuotesInProgress() {
     return quotesInProgress;
   } catch (error) {
     console.error(error);
-    return error;
+    throw error; // Ensure errors are properly thrown
   }
 }
 
@@ -184,4 +186,3 @@ export async function clientPiplineData() {
 
   return data;
 }
-
