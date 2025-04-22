@@ -251,19 +251,35 @@ export async function getClientPipelineData() {
 }
 
 export async function getInsuredLineData() {
-  // If you want to make this dynamic based on client.createdAt or policy.createdAt, let me know
-  return [
-    { name: "Jan", clients: 900 },
-    { name: "Feb", clients: 1200 },
-    { name: "Mar", clients: 1100 },
-    { name: "Apr", clients: 1300 },
-    { name: "May", clients: 1600 },
-    { name: "Jun", clients: 1000 },
-    { name: "Jul", clients: 1400 },
-    { name: "Aug", clients: 1600 },
-    { name: "Sep", clients: 1900 },
-    { name: "Oct", clients: 2500 },
-    { name: "Nov", clients: 2200 },
-    { name: "Dec", clients: 2300 },
-  ];
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  const clientsByMonth = await prisma.client.findMany({
+    where: {
+      createdAt: {
+        gte: oneYearAgo,
+      },
+    },
+    select: {
+      createdAt: true,
+    },
+  });
+
+  const monthlyData = Array.from({ length: 12 }, (_, i) => {
+    const month = new Date();
+    month.setMonth(month.getMonth() - (11 - i));
+    const monthKey = month.toISOString().slice(0, 7); // Format as YYYY-MM
+    const count = clientsByMonth.filter(
+      (client) => client.createdAt.toISOString().slice(0, 7) === monthKey
+    ).length;
+
+    return {
+      name: month.toLocaleString("default", { month: "short" }),
+      clients: count,
+    };
+  });
+
+  console.log("Monthly Data: ", monthlyData);
+
+  return monthlyData;
 }
