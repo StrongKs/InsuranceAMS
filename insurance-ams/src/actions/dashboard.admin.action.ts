@@ -187,13 +187,16 @@ export async function clientPiplineData() {
   return data;
 }
 
-// 1️⃣ Count Chart Data - Active vs Non-Active Policies
+// 1 Count Chart Data - Active vs Non-Active Policies
 export async function getCountChartData() {
   const policies = await getPolicies();
   const activePolicies = policies.filter(
     (policy) => policy.status === PolicyStatus.ACTIVE
   ).length;
   const nonActivePolicies = policies.length - activePolicies;
+
+  console.log("ADMIN Active Policies:", activePolicies);
+  console.log("ADMIN Non-Active Policies:", nonActivePolicies);
 
   return [
     {

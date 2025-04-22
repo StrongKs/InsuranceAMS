@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { Role } from "@prisma/client";
 
-import Dashboard from "@/Component/DashBoard";
+import Dashboard from "@/Component/Dashboard";
 
 import {
   getQuotesInProgress,
