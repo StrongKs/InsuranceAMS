@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,8 +8,7 @@ datasource db {
 }
 
 model Client {
-  // Personal information
-  id         String    @id @default(cuid())
+  id         String      @id @default(cuid())
   Fname      String
   Lname      String?
   DOB        DateTime?
@@ -24,53 +17,69 @@ model Client {
   email      String?
   phone      String
   dependants String[]
-
-  // Insurance information
-  stage      Stage   @default(LEAD)
-  openClaims Boolean @default(false)
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
+  stage      Stage       @default(LEAD)
+  openClaims Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  agentId    String?
   policies   Policy[]
-  insurances Insurance[]
-
-  agentId    String? 
-
-}
-
-// Client stage
-enum Stage {
-  LEAD
-  CONSULT
-  QUOTE
-  CLOSED_ACCEPTED
-  CLOSED_DENIED
+  insurances Insurance[] @relation("ClientToInsurance")
 }
 
 model Policy {
-  id String @id @default(cuid())
-
-  // Policy information
+  id           String       @id @default(cuid())
   policyNumber String
   startDate    DateTime
   endDate      DateTime
   premium      Float
   isActive     Boolean      @default(true)
   status       PolicyStatus @default(PENDING_SIGNATURE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  clientId     String
+  insuranceId  String
+  claims       Claim[]
+  client       Client       @relation(fields: [clientId], references: [id])
+  insurance    Insurance    @relation(fields: [insuranceId], references: [id])
+}
 
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Insurance {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  policies    Policy[]
+  clients     Client[] @relation("ClientToInsurance")
+}
 
-  // Relations
-  clientId    String
-  client      Client    @relation(fields: [clientId], references: [id])
-  insuranceId String
-  insurance   Insurance @relation(fields: [insuranceId], references: [id])
-  claims      Claim[]
+model Claim {
+  id           String      @id @default(cuid())
+  claimNumber  String
+  incidentDate DateTime
+  amount       Float
+  atFault      Boolean
+  status       ClaimStatus
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  policyId     String
+  policy       Policy      @relation(fields: [policyId], references: [id])
+}
+
+model User {
+  id       String  @id @default(cuid())
+  email    String  @unique
+  password String
+  role     Role    @default(AGENT)
+  name     String? @default("John Doe")
+}
+
+enum Stage {
+  LEAD
+  CONSULT
+  QUOTE
+  CLOSED_ACCEPTED
+  CLOSED_DENIED
 }
 
 enum PolicyStatus {
@@ -80,54 +89,12 @@ enum PolicyStatus {
   CANCELLED
 }
 
-model Insurance {
-  id String @id @default(cuid())
-
-  // Insurance company information
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
-  clients  Client[]
-  policies Policy[]
-}
-
-model Claim {
-  id String @id @default(cuid())
-
-  // Claim information
-  claimNumber  String
-  incidentDate DateTime
-  amount       Float
-  atFault      Boolean
-  status       ClaimStatus
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  policyId String
-  policy   Policy @relation(fields: [policyId], references: [id])
-}
-
 enum ClaimStatus {
   PENDING
   APPROVED
   REJECTED
   IN_REVIEW
   CLOSED
-}
-
-model User{
-   // Personal information
-  id         String     @id @default(cuid())
-  name      String
-  email      String     @unique
-  password   String
-  role       Role      @default(AGENT) 
 }
 
 enum Role {

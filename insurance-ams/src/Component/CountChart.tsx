@@ -1,88 +1,55 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 
-import { getActivePolicyData } from "@/actions/dashboard.action";
+import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
 
-import {
-  RadialBarChart,
-  RadialBar,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+interface PolicyData {
+  name: string;
+  total: number;
+  fill: string;
+}
 
-const data = [
-  {
-    name: "Personal",
-    uv: 200,
-    pv: 100000,
-    fill: "#6BEFCF",
-  },
-  {
-    name: "Commercial",
-    uv: 125,
-    pv: 99567,
-    fill: "#78CCF1",
-  },
-  {
-    name: "Total",
-    uv: 325,
-    pv: 100000,
-    fill: "white",
-  },
-];
+interface CountChartProps {
+  data: PolicyData[];
+}
 
-const style = {
-  top: "50%",
-  right: 0,
-  transform: "translate(0, -50%)",
-  lineHeight: "24px",
-};
+const CountChart: React.FC<CountChartProps> = ({ data }) => {
+  // Calculate active & non-active dynamically
+  const activePolicy =
+    data.find((policy) => policy.name.toLowerCase() === "active")?.total || 0;
+  const nonActivePolicy =
+    data.find((policy) => policy.name.toLowerCase() === "non-active")?.total ||
+    0;
 
-const countChart = () => {
-  interface PolicyData {
-    name: string;
-    total: number;
-    fill: string;
-  }
+  const totalPolicies = activePolicy + nonActivePolicy;
 
-  const [policiesData, setPoliciesData] = useState<PolicyData[]>([]);
-  const [activePolicies, setActivePolicies] = useState<number>(0);
-  const [nonActivePolicies, setNonActivePolicies] = useState<number>(0);
-
-  // calculate percentage of active and non-active policies instead of hardcoding
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const policiesData = await getActivePolicyData();
-      console.log("PoliciesData**: ");
-      console.log(policiesData);
-      setPoliciesData(
-        policiesData.map((policy: any) => ({
-          name: policy.name,
-          total: policy.total,
-          fill: policy.fill,
-        }))
-      );
-
-      setActivePolicies(policiesData[0].total);
-      setNonActivePolicies(policiesData[1].total);
+  // Add Total dynamically using useMemo for optimization
+  const dataWithTotal = useMemo(() => {
+    const totalEntry: PolicyData = {
+      name: "Total",
+      total: totalPolicies,
+      fill: "white",
     };
+    return [...data, totalEntry];
+  }, [data, totalPolicies]);
 
-    fetchData();
-
-    console.log("PoliciesData: ");
-    console.log(policiesData);
-  }, []);
+  const activePercentage =
+    totalPolicies > 0
+      ? ((activePolicy / totalPolicies) * 100).toFixed(2)
+      : "0.00";
+  const nonActivePercentage =
+    totalPolicies > 0
+      ? ((nonActivePolicy / totalPolicies) * 100).toFixed(2)
+      : "0.00";
 
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       {/* Title */}
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold">Policies</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20}></Image>
+        <Image src="/moreDark.png" alt="More Options" width={20} height={20} />
       </div>
       {/* Chart */}
       <div className="w-full h-[75%]">
@@ -93,7 +60,7 @@ const countChart = () => {
             innerRadius="40%"
             outerRadius="100%"
             barSize={30}
-            data={policiesData}
+            data={dataWithTotal}
             endAngle={360}
           >
             <RadialBar
@@ -104,31 +71,20 @@ const countChart = () => {
           </RadialBarChart>
         </ResponsiveContainer>
       </div>
-      {/* Bottom (commercial vs personal) */}
+      {/* Bottom Stats */}
       <div className="flex justify-center gap-16">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 items-center">
           <div className="w-5 h-5 bg-lightCyan rounded-full" />
-          <h1 className="font-bold">{activePolicies}</h1>
+          <h1 className="font-bold">{activePolicy}</h1>
           <h2 className="text-xs text-gray-500">
-            Active{" ("}
-            {(
-              (activePolicies / (activePolicies + nonActivePolicies)) *
-              100
-            ).toFixed(2)}
-            {"%)"}
+            Active ({activePercentage}%)
           </h2>
         </div>
-
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 items-center">
           <div className="w-5 h-5 bg-accentBlue rounded-full" />
-          <h1 className="font-bold">{nonActivePolicies}</h1>
+          <h1 className="font-bold">{nonActivePolicy}</h1>
           <h2 className="text-xs text-gray-500">
-            Non-Active{" ("}
-            {(
-              (nonActivePolicies / (activePolicies + nonActivePolicies)) *
-              100
-            ).toFixed(2)}
-            {"%)"}
+            Non-Active ({nonActivePercentage}%)
           </h2>
         </div>
       </div>
@@ -136,4 +92,4 @@ const countChart = () => {
   );
 };
 
-export default countChart;
+export default CountChart;
