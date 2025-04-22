@@ -8,7 +8,7 @@ async function main() {
   console.log("Seeding database with synthetic data...");
 
   // Create 5 Insurance Companies
-  const numInsurances = 5;
+  const numInsurances = 1;
   const insurances = await Promise.all(
     Array.from({ length: numInsurances }).map(() =>
       prisma.insurance.create({

@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Role } from "@prisma/client";
 
 interface Client {
   id: string;
   Fname: string;
   Lname: string;
 }
+
 interface Insurance {
-    id: string;
-    name: string;
-  }
-  
+  id: string;
+  name: string;
+}
 
 export default function NewPolicyPage() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -28,28 +29,38 @@ export default function NewPolicyPage() {
 
   const router = useRouter();
   const [insurances, setInsurances] = useState<Insurance[]>([]);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  // Fetch Insurances
+  // Fetch insurances
   useEffect(() => {
     const fetchInsurances = async () => {
       const res = await fetch("/api/insurances");
       const data = await res.json();
       setInsurances(data);
     };
-  
-    
-    fetchInsurances(); // add this line
+    fetchInsurances();
   }, []);
+
+  // Fetch user and clients
   useEffect(() => {
-    // Fetch existing clients to choose from
-    const fetchClients = async () => {
-      const res = await fetch("/api/clients");
-      const data = await res.json();
-      setClients(data);
+    const fetchUserAndClients = async () => {
+      const resUser = await fetch("/api/user");
+      const { user } = await resUser.json();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      setUserRole(user.role);
+
+      // Always fetch from SECURE clients endpoint
+      const resClients = await fetch("/api/clients/secure");
+      const filteredClients = await resClients.json();
+      setClients(filteredClients);
     };
 
-    fetchClients();
-  }, []);
+    fetchUserAndClients();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +76,7 @@ export default function NewPolicyPage() {
       });
 
       if (res.ok) {
-        router.push("/policies"); // Redirect back to policies list
+        router.push("/policies");
       }
     } catch (error) {
       console.error("Failed to create policy:", error);
@@ -77,6 +88,7 @@ export default function NewPolicyPage() {
       <h1 className="text-2xl font-bold mb-4 text-blue-700">Add New Policy</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Policy Fields */}
         <div>
           <label>Policy Number:</label>
           <input
@@ -134,23 +146,23 @@ export default function NewPolicyPage() {
             <option value="CANCELLED">CANCELLED</option>
           </select>
         </div>
-        <div>
-        <label>Assign to Insurance:</label>
-  <select
-    value={form.insuranceId}
-    onChange={(e) => setForm({ ...form, insuranceId: e.target.value })}
-    className="border rounded px-2 py-1 w-full"
-    required
-  >
-    <option value="">Select an Insurance Company</option>
-    {insurances.map((insurance) => (
-      <option key={insurance.id} value={insurance.id}>
-        {insurance.name}
-      </option>
-    ))}
-  </select>
-</div>
 
+        <div>
+          <label>Assign to Insurance:</label>
+          <select
+            value={form.insuranceId}
+            onChange={(e) => setForm({ ...form, insuranceId: e.target.value })}
+            className="border rounded px-2 py-1 w-full"
+            required
+          >
+            <option value="">Select an Insurance Company</option>
+            {insurances.map((insurance) => (
+              <option key={insurance.id} value={insurance.id}>
+                {insurance.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div>
           <label>Assign to Client:</label>
@@ -161,11 +173,12 @@ export default function NewPolicyPage() {
             required
           >
             <option value="">Select a Client</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.id}>
-                {client.Fname} {client.Lname}
-              </option>
-            ))}
+            {clients.length > 0 &&
+              clients.map((client) => (
+                <option key={client.id} value={client.id}>
+                  {client.Fname} {client.Lname}
+                </option>
+              ))}
           </select>
         </div>
 

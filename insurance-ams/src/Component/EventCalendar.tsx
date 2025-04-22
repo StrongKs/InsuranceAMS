@@ -15,25 +15,25 @@ const events = [
     id: 1,
     title: "Event 1",
     time: "12:00 PM - 2:00 PM",
-    Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    Description: "Progressive Underwriter Meeting ",
   },
   {
     id: 2,
     title: "Event 2",
     time: "2:00 PM - 4:00 PM",
-    Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    Description: "David Willis closing meeting ",
   },
   {
     id: 3,
     title: "Event 3",
     time: "4:00 PM - 6:00 PM",
-    Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    Description: "Potential Carrier acquisition Zoom Call ",
   },
   {
     id: 4,
     title: "Event 4",
     time: "6:00 PM - 8:00 PM",
-    Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    Description: "Send out all quotes for tomorrow ",
   },
 ];
 

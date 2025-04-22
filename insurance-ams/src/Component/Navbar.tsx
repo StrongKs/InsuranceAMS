@@ -89,7 +89,7 @@ const Navbar = () => {
       <div className="flex items-center gap-4">
         <div className="relative cursor-pointer">
           <FaBell className="text-gray-500 text-lg" />
-          <span className="absolute -top-3 -right-3 w-5 h-5 flex items-center justify-center bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
+          <span className="absolute -top-3 -right-3 w-5 h-5 flex items-center justify-center bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ const Navbar = () => {
             name={user?.name || "User"}
             size="30"
             round={true}
-            color="#6B46C1"
+            color="#3b82f6"
           />
         </div>
       </div>
