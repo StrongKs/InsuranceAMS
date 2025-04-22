@@ -1,5 +1,3 @@
-"use client";
-
 import HomeIcon from "@mui/icons-material/Home";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import PolicyIcon from "@mui/icons-material/Policy";
@@ -13,81 +11,77 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "next/link";
 import Image from "next/image";
 import { Box } from "@mui/material";
-import { useRouter } from "next/router";
+import { Role } from "@prisma/client";
 
-const menuItems = [
-  {
-    title: "MENU",
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: "Home",
-        href: "/admin",
-      },
-      {
-        icon: <EmojiPeopleIcon />,
-        label: "Clients",
-        href: "/clients",
-      },
-      {
-        icon: <PolicyIcon />,
-        label: "Policies",
-        href: "/policies",
-      },
-      {
-        icon: <GppMaybeIcon />,
-        label: "Claims",
-        href: "/Claims",
-      },
-      {
-        icon: <AutorenewIcon />,
-        label: "Renewals",
-        href: "/",
-      },
-      {
-        icon: <SupportAgentIcon />,
-        label: "Agents",
-        href: "/",
-      },
-      {
-        icon: <SummarizeIcon />,
-        label: "Reports",
-        href: "/",
-      },
-    ],
-  },
-  {
-    title: "OTHER",
-    items: [
-      {
-        icon: <PermIdentityIcon />,
-        label: "Profile",
-        href: "/",
-      },
-      {
-        icon: <SettingsIcon />,
-        label: "Settings",
-        href: "/",
-      },
-      {
-        icon: <LogoutIcon />,
-        label: "Logout",
-        href: "#",
-        onClick: () => handleLogout(),
-      },
-    ],
-  },
-];
-
-const handleLogout = async () => {
-  await fetch("/api/logout", {
-    method: "POST",
-    credentials: "include",
-  });
-  window.location.href = "/login";
+type MenuProps = {
+  role: "ADMIN" | "AGENT";
 };
 
-const Menu = () => {
+const Menu = ({ role }: MenuProps) => {
+  console.log("HERE", role);
+  const menuItems = [
+    {
+      title: "MENU",
+      items: [
+        {
+          icon: <HomeIcon />,
+          label: "Home",
+          href: role === "ADMIN" ? "/admin" : "/agent",
+        },
+        {
+          icon: <EmojiPeopleIcon />,
+          label: "Clients",
+          href: "/clients",
+        },
+        {
+          icon: <PolicyIcon />,
+          label: "Policies",
+          href: "/policies",
+        },
+        {
+          icon: <GppMaybeIcon />,
+          label: "Claims",
+          href: "/Claims",
+        },
+        {
+          icon: <AutorenewIcon />,
+          label: "Renewals",
+          href: "/",
+        },
+        {
+          icon: <SupportAgentIcon />,
+          label: "Agents",
+          href: "/",
+        },
+        {
+          icon: <SummarizeIcon />,
+          label: "Reports",
+          href: "/",
+        },
+      ],
+    },
+    {
+      title: "OTHER",
+      items: [
+        {
+          icon: <PermIdentityIcon />,
+          label: "Profile",
+          href: "/",
+        },
+        {
+          icon: <SettingsIcon />,
+          label: "Settings",
+          href: "/",
+        },
+        {
+          icon: <LogoutIcon />,
+          label: "Logout",
+          href: "/",
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
@@ -98,7 +92,6 @@ const Menu = () => {
               className="flex items-center justify-center lg:justify-start gap-4 text-gray-400 py-2"
               href={item.href}
               key={item.label}
-              onClick={item.onClick}
             >
               <Box sx={{ fontSize: 20 }}>{item.icon}</Box>
               <span className="hidden lg:block">{item.label}</span>
