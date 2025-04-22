@@ -237,18 +237,36 @@ export async function getCountChartData(agentId: string) {
 }
 
 export async function getInsuredLineData(agentId: string) {
-  return [
-    { name: "Jan", clients: 200 },
-    { name: "Feb", clients: 300 },
-    { name: "Mar", clients: 280 },
-    { name: "Apr", clients: 310 },
-    { name: "May", clients: 360 },
-    { name: "Jun", clients: 250 },
-    { name: "Jul", clients: 340 },
-    { name: "Aug", clients: 360 },
-    { name: "Sep", clients: 390 },
-    { name: "Oct", clients: 450 },
-    { name: "Nov", clients: 420 },
-    { name: "Dec", clients: 430 },
-  ];
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  const clientsByMonth = await prisma.client.findMany({
+    where: {
+      createdAt: {
+        gte: oneYearAgo,
+      },
+      agentId: agentId, // Assuming clients table has an agentId field
+    },
+    select: {
+      createdAt: true,
+    },
+  });
+
+  const monthlyData = Array.from({ length: 12 }, (_, i) => {
+    const month = new Date();
+    month.setMonth(month.getMonth() - (11 - i));
+    const monthKey = month.toISOString().slice(0, 7); // Format as YYYY-MM
+    const count = clientsByMonth.filter(
+      (client) => client.createdAt.toISOString().slice(0, 7) === monthKey
+    ).length;
+
+    return {
+      name: month.toLocaleString("default", { month: "short" }),
+      clients: count,
+    };
+  });
+
+  console.log(`Monthly Data for Agent ${agentId}: `, monthlyData);
+
+  return monthlyData;
 }

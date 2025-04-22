@@ -25,7 +25,7 @@ const InsuredLineChart: React.FC<InsuredLineChartProps> = ({ data }) => {
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Client History Count</h1>
+        <h1 className="text-lg font-semibold">Client Creation per Month</h1>
         <Image src="/moreDark.png" alt="More Options" width={20} height={20} />
       </div>
       <ResponsiveContainer width="100%" height="90%">

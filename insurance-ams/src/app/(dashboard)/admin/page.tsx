@@ -49,6 +49,10 @@ export default async function AdminPage() {
     getInsuredLineData(), // Fetch data for InsuredLineChart
   ]);
 
+  console.log("loaded in AdminPage:", {
+    insuredLineData,
+  });
+
   // Consolidated user card data
   const userCardsData = {
     leads: leads.length,

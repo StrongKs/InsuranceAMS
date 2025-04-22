@@ -21,7 +21,7 @@ async function main() {
   );
 
   // Create 10 Clients and Assign Random Insurances (Many-to-Many)
-  const numClients = 10;
+  const numClients = 20;
   const clients = await Promise.all(
     Array.from({ length: numClients }).map(async () => {
       const newClient = await prisma.client.create({
@@ -51,8 +51,12 @@ async function main() {
               faker.number.int({ min: 1, max: 3 }) // Each client gets 1-3 random insurances
             ),
           },
+          createdAt: faker.date.past({ years: 1 }),
         },
       });
+
+      console.log("Client created at:", newClient.createdAt);
+
       return newClient;
     })
   );
