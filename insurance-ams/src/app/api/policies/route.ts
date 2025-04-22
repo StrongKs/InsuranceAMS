@@ -5,6 +5,10 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
+    if (!data.clientId || !data.insuranceId) {
+      return NextResponse.json({ error: "Client ID and Insurance ID are required" }, { status: 400 });
+    }
+
     const newPolicy = await prisma.policy.create({
       data: {
         policyNumber: data.policyNumber,
@@ -17,8 +21,8 @@ export async function POST(req: NextRequest) {
           connect: { id: data.clientId },
         },
         insurance: {
-            connect: { id: data.insuranceId },
-          },
+          connect: { id: data.insuranceId },
+        },
       },
     });
 
