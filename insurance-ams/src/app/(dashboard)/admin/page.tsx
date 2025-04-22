@@ -27,6 +27,7 @@ export default async function AdminPage() {
   const token = cookieStore.get("token")?.value;
 
   if (!token) redirect("/login");
+  if (!token) redirect("/login");
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { role: string };

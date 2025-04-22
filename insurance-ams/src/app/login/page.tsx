@@ -35,14 +35,12 @@ export default function LoginPage() {
       
       // Redirect based on user role
       console.log(data.role === Role.ADMIN);
-      
       if (data.role === Role.ADMIN) {
-        router.push('/admin');
-
+        window.location.href = '/admin'
       } else if (data.role === Role.AGENT) {
-        router.push('/agent');
+        window.location.href = '/agent';
       } else {
-        router.push('/');
+        window.location.href = '/';
       }
     } catch (err) {
       setError('An unexpected error occurred.');
