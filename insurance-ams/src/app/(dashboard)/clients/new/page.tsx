@@ -35,11 +35,11 @@ export default function AddClientPage() {
 
       setUserRole(user.role);
 
-      if (user.role === "ADMIN") {
+      if (user.role === Role.ADMIN) {
         const res = await fetch("/api/agents");
         const data = await res.json();
         setAgents(data);
-      } else if (user.role === "AGENT") {
+      } else if (user.role === Role.AGENT) {
         setFormData((prev) => ({ ...prev, agentId: user.userId }));
       }
     };

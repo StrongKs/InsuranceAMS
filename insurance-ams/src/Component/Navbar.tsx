@@ -4,18 +4,36 @@ import Avatar from "react-avatar";
 import { useState, useEffect } from "react";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { Role } from "@prisma/client"; // Assuming you have this enum
+import { getUserFromToken } from "@/lib/auth"; // 👈 Import this if you have it
+import { Role } from "@prisma/client";
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
   const [clients, setClients] = useState<{ id: string; Fname: string; Lname: string }[]>([]);
+  const [user, setUser] = useState<{ name: string; role: Role } | null>(null);
+
   const router = useRouter();
+
+  // Fetch user info
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/user"); 
+        const data = await res.json();
+        setUser(data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   // Fetch clients
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await fetch("/api/clients");
+        const res = await fetch("/api/clients/secure");
         const data = await res.json();
         setClients(data);
       } catch (error) {
@@ -76,14 +94,14 @@ const Navbar = () => {
 
         <div className="flex items-center gap-2">
           <div className="text-right">
-            <p className="text-sm font-semibold">Waleed Aref</p>
-            <p className="text-xs text-gray-500">Admin</p>
+            <p className="text-sm font-semibold">{user?.name || "User"}</p>
+            <p className="text-xs text-gray-500">{user?.role || "Role"}</p>
           </div>
           <Avatar 
-            name= "Waleed Aref"
-            size="30" 
-            round={true} 
-            color="#6B46C1" 
+            name={user?.name || "User"}
+            size="30"
+            round={true}
+            color="#6B46C1"
           />
         </div>
       </div>
