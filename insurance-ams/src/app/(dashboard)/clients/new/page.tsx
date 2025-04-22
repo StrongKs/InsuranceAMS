@@ -7,7 +7,7 @@ import { getUserFromToken } from "@/lib/auth"; // 🛠 Your version!
 
 export default function AddClientPage() {
   const router = useRouter();
-  const [agents, setAgents] = useState<{ id: string; email: string }[]>([]);
+  const [agents, setAgents] = useState<{ id: string; email: string, name: string }[]>([]);
   const [formData, setFormData] = useState({
     Fname: "",
     Lname: "",
@@ -212,7 +212,7 @@ export default function AddClientPage() {
             <option value="">Assign Agent</option>
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
-                {agent.email}
+                {agent.name}
               </option>
             ))}
           </select>
