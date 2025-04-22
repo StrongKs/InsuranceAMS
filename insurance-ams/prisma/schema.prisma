@@ -122,7 +122,7 @@ enum ClaimStatus {
 model User{
    // Personal information
   id         String     @id @default(cuid())
-  name      String?     @default("John Doe")
+  name      String
   email      String     @unique
   password   String
   role       Role      @default(AGENT) 

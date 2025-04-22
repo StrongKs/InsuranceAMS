@@ -57,7 +57,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         dependants: data.dependants,
         openClaims: data.openClaims,
         agentId: data.agentId,
-        // If you want to allow updating dependants or openClaims too, add here
       },
     });
 
